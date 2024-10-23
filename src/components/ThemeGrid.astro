@@ -1,0 +1,235 @@
+---
+import ThemeCard from './ThemeCard.astro';
+import { getCollection } from 'astro:content';
+
+const themes = await getCollection('themes');
+const initialVisibleCount = 9;
+---
+
+<div class="space-y-12">
+  <div>
+    <div id="theme-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {themes.slice(0, initialVisibleCount).map(theme => (
+        <ThemeCard 
+          id={theme.id}
+          title={theme.data.title}
+          description={theme.data.description}
+          icon={theme.data.icon}
+          isPaid={theme.data.isPaid}
+          category={theme.data.category}
+        />
+      ))}
+    </div>
+
+    {themes.length > initialVisibleCount && (
+      <div class="text-center mt-8">
+        <button
+          id="show-more-themes"
+          class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+        >
+          Show All Themes ({themes.length - initialVisibleCount} more)
+        </button>
+      </div>
+    )}
+
+    <div id="hidden-themes" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+      {themes.slice(initialVisibleCount).map(theme => (
+        <ThemeCard 
+          id={theme.id}
+          title={theme.data.title}
+          description={theme.data.description}
+          icon={theme.data.icon}
+          isPaid={theme.data.isPaid}
+          category={theme.data.category}
+        />
+      ))}
+    </div>
+  </div>
+
+  <!-- Blog Feed Section -->
+  <section class="py-12 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-8">Latest from Our Blog</h2>
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {[
+          {
+            title: "How to Choose the Perfect WordPress Theme",
+            excerpt: "Selecting the right WordPress theme can make or break your website. Learn the key factors to consider when making your choice.",
+            date: "2023-07-15",
+            slug: "how-to-choose-wordpress-theme"
+          },
+          {
+            title: "Top WordPress SEO Practices for 2023",
+            excerpt: "Optimize your WordPress site for search engines with these proven SEO strategies and best practices.",
+            date: "2023-07-10",
+            slug: "wordpress-seo-practices"
+          },
+          {
+            title: "Essential WordPress Plugins for Every Site",
+            excerpt: "Discover the must-have WordPress plugins that will enhance your website's functionality and user experience.",
+            date: "2023-07-05",
+            slug: "essential-wordpress-plugins"
+          }
+        ].map(post => (
+          <article class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-6">
+              <time class="text-sm text-gray-500" datetime={post.date}>
+                {new Date(post.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </time>
+              <h3 class="text-xl font-semibold mt-2 mb-3">
+                <a href={`/blog/${post.slug}`} class="text-gray-900 hover:text-blue-600 transition-colors">
+                  {post.title}
+                </a>
+              </h3>
+              <p class="text-gray-600 line-clamp-3">{post.excerpt}</p>
+              <a href={`/blog/${post.slug}`} class="inline-block mt-4 text-blue-600 hover:text-blue-800 font-medium">
+                Read More →
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-12 bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
+      <div class="space-y-4">
+        {[
+          {
+            question: "How do I install a WordPress theme?",
+            answer: "To install a WordPress theme, go to your WordPress dashboard, navigate to Appearance > Themes, click 'Add New', then either search for the theme or upload the theme file if you have it."
+          },
+          {
+            question: "Can I customize these themes?",
+            answer: "Yes, most WordPress themes can be customized. The level of customization depends on the theme, but generally, you can change colors, fonts, and layouts through the WordPress Customizer or theme options panel."
+          },
+          {
+            question: "Do I need to purchase a theme or can I use a free one?",
+            answer: "Both free and paid themes are available. Free themes are great for beginners or simple websites, while paid themes often offer more features, customization options, and support."
+          },
+          {
+            question: "Are these themes mobile-friendly?",
+            answer: "Yes, all themes in our directory are responsive and mobile-friendly, ensuring your website looks great on all devices."
+          }
+        ].map((faq, index) => (
+          <div class="border border-gray-200 rounded-lg">
+            <button
+              class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 focus:outline-none"
+              data-faq-btn={index}
+            >
+              <span class="font-semibold text-gray-900">{faq.question}</span>
+              <svg
+                class="w-5 h-5 text-gray-500 transform transition-transform duration-200"
+                data-faq-icon={index}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div class="hidden px-6 pb-4" data-faq-answer={index}>
+              <p class="text-gray-600">{faq.answer}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  let currentFilter = 'all';
+  let currentCategory = 'All';
+  let currentSearch = '';
+  let showingAllThemes = false;
+
+  const themeCards = document.querySelectorAll('.theme-card');
+  const showMoreBtn = document.getElementById('show-more-themes');
+  const hiddenThemes = document.getElementById('hidden-themes');
+
+  showMoreBtn?.addEventListener('click', () => {
+    showingAllThemes = !showingAllThemes;
+    if (showingAllThemes) {
+      hiddenThemes.classList.remove('hidden');
+      showMoreBtn.textContent = 'Show Less';
+    } else {
+      hiddenThemes.classList.add('hidden');
+      showMoreBtn.textContent = `Show All Themes (${hiddenThemes.children.length} more)`;
+    }
+    applyFilters();
+  });
+
+  function applyFilters() {
+    themeCards.forEach(card => {
+      const isPaid = card.dataset.paid === 'true';
+      const category = card.dataset.category;
+      const title = card.querySelector('h3').textContent.toLowerCase();
+      const description = card.querySelector('p').textContent.toLowerCase();
+
+      const matchesFilter = 
+        currentFilter === 'all' || 
+        (currentFilter === 'free' && !isPaid) || 
+        (currentFilter === 'paid' && isPaid);
+
+      const matchesCategory = 
+        currentCategory === 'All' || 
+        category === currentCategory;
+
+      const matchesSearch = 
+        currentSearch === '' || 
+        title.includes(currentSearch) || 
+        description.includes(currentSearch);
+
+      if (matchesFilter && matchesCategory && matchesSearch) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // FAQ functionality
+  document.querySelectorAll('[data-faq-btn]').forEach(button => {
+    button.addEventListener('click', () => {
+      const index = button.getAttribute('data-faq-btn');
+      const answer = document.querySelector(`[data-faq-answer="${index}"]`);
+      const icon = document.querySelector(`[data-faq-icon="${index}"]`);
+      
+      const isOpen = !answer.classList.contains('hidden');
+      
+      // Close all FAQs
+      document.querySelectorAll('[data-faq-answer]').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('[data-faq-icon]').forEach(el => el.classList.remove('rotate-180'));
+      
+      // Toggle clicked FAQ
+      if (!isOpen) {
+        answer.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      }
+    });
+  });
+
+  // Event listeners for filters
+  document.addEventListener('filterChange', (e) => {
+    currentFilter = e.detail;
+    applyFilters();
+  });
+
+  document.addEventListener('categoryChange', (e) => {
+    currentCategory = e.detail;
+    applyFilters();
+  });
+
+  document.addEventListener('searchChange', (e) => {
+    currentSearch = e.detail.toLowerCase();
+    applyFilters();
+  });
+</script>

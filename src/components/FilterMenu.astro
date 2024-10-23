@@ -1,0 +1,23 @@
+---
+---
+<div class="flex justify-center space-x-4 mb-6">
+  <button class="filter-btn px-4 py-2 bg-blue-500 text-white rounded" data-filter="all">All</button>
+  <button class="filter-btn px-4 py-2 bg-gray-200 text-gray-700 rounded" data-filter="free">Free</button>
+  <button class="filter-btn px-4 py-2 bg-gray-200 text-gray-700 rounded" data-filter="paid">Paid</button>
+</div>
+
+<script>
+  const buttons = document.querySelectorAll('.filter-btn');
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-blue-500', 'text-white');
+        btn.classList.add('bg-gray-200', 'text-gray-700');
+      });
+      button.classList.remove('bg-gray-200', 'text-gray-700');
+      button.classList.add('bg-blue-500', 'text-white');
+      const filter = button.getAttribute('data-filter');
+      document.dispatchEvent(new CustomEvent('filterChange', { detail: filter }));
+    });
+  });
+</script>

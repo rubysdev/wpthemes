@@ -1,0 +1,29 @@
+---
+export interface Props {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  isPaid: boolean;
+  category: string;
+}
+
+const { id, title, description, icon, isPaid, category } = Astro.props;
+---
+
+<div class="theme-card border border-gray-200 rounded-lg p-4 flex flex-col" data-paid={isPaid.toString()} data-category={category}>
+  <div class="flex items-center mb-2">
+    <span class="text-2xl mr-2">{icon}</span>
+    <h3 class="text-xl font-semibold">{title}</h3>
+  </div>
+  <p class="text-gray-600 mb-4">{description}</p>
+  <div class="mt-auto flex justify-between items-center">
+    <span class={`px-2 py-1 text-xs rounded ${isPaid ? 'bg-yellow-200 text-yellow-800' : 'bg-green-200 text-green-800'}`}>
+      {isPaid ? 'Paid' : 'Free'}
+    </span>
+    <span class="text-sm text-gray-500">{category}</span>
+    <a href={`/theme/${id}`} class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+      More Details
+    </a>
+  </div>
+</div>

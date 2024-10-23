@@ -1,0 +1,44 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const themeEntries = await getCollection('themes');
+  return themeEntries.map(entry => ({
+    params: { id: entry.id }, props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<Layout 
+  title={`${entry.data.title} - WordPress Theme Review`}
+  description={`Detailed review of ${entry.data.title}. ${entry.data.description}`}
+  image={entry.data.image}
+>
+  <main class="container mx-auto px-4 py-8">
+    <nav class="text-sm breadcrumbs mb-4">
+      <ol class="list-none p-0 inline-flex">
+        <li class="flex items-center">
+          <a href="/" class="text-blue-500 hover:text-blue-700">Home</a>
+          <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
+        </li>
+        <li>
+          <span class="text-gray-500">{entry.data.title}</span>
+        </li>
+      </ol>
+    </nav>
+    <h1 class="text-3xl font-bold mb-4">{entry.data.title}</h1>
+    <div class="bg-gray-100 p-6 rounded-lg mb-6">
+      <p class="text-xl mb-2">{entry.data.icon} {entry.data.description}</p>
+      <p class="text-gray-600">Category: {entry.data.category}</p>
+      <p class="text-gray-600">Type: {entry.data.isPaid ? 'Paid' : 'Free'}</p>
+    </div>
+    <article class="prose lg:prose-xl">
+      <Content />
+    </article>
+    <a href="/" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-6 inline-block">Back to Themes</a>
+  </main>
+</Layout>

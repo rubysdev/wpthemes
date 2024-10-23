@@ -1,0 +1,52 @@
+---
+const blogPosts = [
+  {
+    title: "How to Choose the Perfect WordPress Theme",
+    excerpt: "Selecting the right WordPress theme can make or break your website. Learn the key factors to consider when making your choice.",
+    date: "2023-07-15",
+    slug: "how-to-choose-wordpress-theme"
+  },
+  {
+    title: "Top WordPress SEO Practices for 2023",
+    excerpt: "Optimize your WordPress site for search engines with these proven SEO strategies and best practices.",
+    date: "2023-07-10",
+    slug: "wordpress-seo-practices"
+  },
+  {
+    title: "Essential WordPress Plugins for Every Site",
+    excerpt: "Discover the must-have WordPress plugins that will enhance your website's functionality and user experience.",
+    date: "2023-07-05",
+    slug: "essential-wordpress-plugins"
+  }
+];
+---
+
+<section class="py-12 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="text-3xl font-bold mb-8">Latest from Our Blog</h2>
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {blogPosts.map(post => (
+        <article class="bg-white rounded-lg shadow-md overflow-hidden">
+          <div class="p-6">
+            <time class="text-sm text-gray-500" datetime={post.date}>
+              {new Date(post.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+            <h3 class="text-xl font-semibold mt-2 mb-3">
+              <a href={`/blog/${post.slug}`} class="text-gray-900 hover:text-blue-600 transition-colors">
+                {post.title}
+              </a>
+            </h3>
+            <p class="text-gray-600 line-clamp-3">{post.excerpt}</p>
+            <a href={`/blog/${post.slug}`} class="inline-block mt-4 text-blue-600 hover:text-blue-800 font-medium">
+              Read More →
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,72 @@
+---
+const faqs = [
+  {
+    question: "How do I install a WordPress theme?",
+    answer: "To install a WordPress theme, go to your WordPress dashboard, navigate to Appearance > Themes, click 'Add New', then either search for the theme or upload the theme file if you have it."
+  },
+  {
+    question: "Can I customize these themes?",
+    answer: "Yes, most WordPress themes can be customized. The level of customization depends on the theme, but generally, you can change colors, fonts, and layouts through the WordPress Customizer or theme options panel."
+  },
+  {
+    question: "Do I need to purchase a theme or can I use a free one?",
+    answer: "Both free and paid themes are available. Free themes are great for beginners or simple websites, while paid themes often offer more features, customization options, and support."
+  },
+  {
+    question: "Are these themes mobile-friendly?",
+    answer: "Yes, all themes in our directory are responsive and mobile-friendly, ensuring your website looks great on all devices."
+  }
+];
+---
+
+<section class="py-12 bg-white">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 class="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
+    <div class="space-y-4">
+      {faqs.map((faq, index) => (
+        <div class="border border-gray-200 rounded-lg" x-data="{ open: false }">
+          <button
+            class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 focus:outline-none"
+            data-faq-btn={index}
+          >
+            <span class="font-semibold text-gray-900">{faq.question}</span>
+            <svg
+              class="w-5 h-5 text-gray-500 transform transition-transform duration-200"
+              data-faq-icon={index}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="hidden px-6 pb-4" data-faq-answer={index}>
+            <p class="text-gray-600">{faq.answer}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('[data-faq-btn]').forEach(button => {
+    button.addEventListener('click', () => {
+      const index = button.getAttribute('data-faq-btn');
+      const answer = document.querySelector(`[data-faq-answer="${index}"]`);
+      const icon = document.querySelector(`[data-faq-icon="${index}"]`);
+      
+      const isOpen = !answer.classList.contains('hidden');
+      
+      // Close all FAQs
+      document.querySelectorAll('[data-faq-answer]').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('[data-faq-icon]').forEach(el => el.classList.remove('rotate-180'));
+      
+      // Toggle clicked FAQ
+      if (!isOpen) {
+        answer.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      }
+    });
+  });
+</script>

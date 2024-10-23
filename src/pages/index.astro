@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ThemeGrid from '../components/ThemeGrid.astro';
+import FilterMenu from '../components/FilterMenu.astro';
+import SearchBar from '../components/SearchBar.astro';
+import CategoryCloud from '../components/CategoryCloud.astro';
+---
+
+<Layout 
+  title="WordPress Templates Directory | Find Your Perfect Theme"
+  description="Explore our curated collection of WordPress themes for blogs, e-commerce, portfolios, and more. Find the perfect theme to elevate your website."
+>
+  <main class="container mx-auto px-4">
+    <FilterMenu />
+    <SearchBar />
+    <CategoryCloud />
+    <ThemeGrid />
+  </main>
+</Layout>
