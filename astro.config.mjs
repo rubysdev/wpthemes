@@ -9,5 +9,5 @@ export default defineConfig({
       external: ["svgo"],
     },
   },
-  site: 'https://your-website-url.com',
+  site: 'https://07cd188d.wpthemes-dy9.pages.dev/',
 });
